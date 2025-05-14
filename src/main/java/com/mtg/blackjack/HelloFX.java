@@ -1,4 +1,4 @@
-package com.mtg;
+package com.mtg.blackjack;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
