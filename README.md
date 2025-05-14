@@ -9,8 +9,8 @@
    1.1) Spielinfos (z.B Geld: Startwert 100€?)<br/>
    1.2) Modiausauswahl <br/>
    1.3) Spieltitel und Hintergrund<br/>
-2)Tutorial <br/>
-  2.1) Erklärung des Spiels z.B. mit Erklärung der Startbildschirminfos <br/>
+2) Tutorial <br/>
+   2.1) Erklärung des Spiels z.B. mit Erklärung der Startbildschirminfos <br/>
 
 
    
