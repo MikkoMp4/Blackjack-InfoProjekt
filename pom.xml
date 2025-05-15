@@ -8,6 +8,7 @@
     <artifactId>blackjack-info-projekt</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
     <dependencies>
         <!-- JUnit 5 für Unit-Tests -->
         <dependency>
@@ -26,9 +27,17 @@
 
         <!-- (später) JavaFX fürs GUI -->
         <dependency>
-          <groupId>org.openjfx</groupId>
-          <artifactId>javafx-controls</artifactId>
-          <version>24-ea+5</version>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>24-ea+5</version>
+            <classifier>win</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>24-ea+5</version>
+            <classifier>win</classifier>
         </dependency>
 
         <!-- (später) Netty oder RMI fürs Networking -->
@@ -62,6 +71,7 @@
                     <mainClass>com.mtg.blackjack.Main</mainClass>
                 </configuration>
             </plugin>
+
             <!-- (optional) javafx-maven-plugin, sobald ihr GUI anlegt -->
         </plugins>
     </build>
