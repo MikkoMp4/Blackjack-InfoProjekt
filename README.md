@@ -11,6 +11,14 @@
    1.3) Spieltitel und Hintergrund<br/>
 2) Tutorial <br/>
    2.1) Erklärung des Spiels z.B. mit Erklärung der Startbildschirminfos <br/>
+3) Spielablauf <br/>
+   3.1) Verteilung Geld, Setzen der Rundenzahl <br/>
+   3.2) Verteilung Karten <br/>
+   3.3) Spieleraktionen <br/>
+   3.4) Dealeraktionen <br/>
+   3.5) Wertung <br/>
+   3.6) potentiell neue Runde <br/>
+   
 
 
    
