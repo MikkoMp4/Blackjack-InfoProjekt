@@ -118,11 +118,9 @@ public class logic {
             dealerHand.add(drawCard());
             System.out.println("Dealer zieht eine Karte: " + dealerHand.get(dealerHand.size() - 1));
             System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + sumHand(dealerHand) + ")");
-            try {
-                Thread.sleep(1000); // Pause für 1 Sekunde, um den Dealerzug zu simulieren
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
+            Warten(2000);
+        
+            
         }
 
         int dealerSum = sumHand(dealerHand);
@@ -157,6 +155,14 @@ public class logic {
             }
         } catch (Exception e) {
             for (int i = 0; i < 50; i++) System.out.println();
+        }
+    }
+
+    private void Warten(int zeit) {
+        try {
+            Thread.sleep(zeit); // Pause für 1 Sekunde, um den Dealerzug zu simulieren
+        } catch (Exception e) {
+            // TODO: handle exception
         }
     }
 
