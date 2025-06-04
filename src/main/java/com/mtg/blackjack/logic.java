@@ -14,6 +14,7 @@ public class logic {
         while (playerBalance > 0) {
             resetDeck();
 
+            clearConsole();
             System.out.println("\n--------------------------------");
             System.out.println("Aktuelles Guthaben: $" + playerBalance);
             System.out.println("Aktueller Einsatz: $" + currentBet);
@@ -22,21 +23,32 @@ public class logic {
 
             int roundResult = playRound();
 
-            if (roundResult == 1) {
-                System.out.println("Du hast gewonnen!");
-                playerBalance += currentBet;
-            } else if (roundResult == 2) {
-                System.out.println("Blackjack! Du gewinnst 1.5x Einsatz!");
-                playerBalance += (int)(currentBet * 1.5);
-            } else {
-                System.out.println("Du hast verloren.");
-                playerBalance -= currentBet;
+            switch (roundResult) {
+                case 1 -> {
+                    System.out.println("Du hast gewonnen!");
+                    playerBalance += currentBet;
+                }
+                case 2 -> {
+                    System.out.println("Blackjack! Du gewinnst 1.5x Einsatz!");
+                    playerBalance += (int)(currentBet * 1.5);
+                }
+                case 3 -> {
+                    System.out.println("Unentschieden – dein Einsatz wird zurückerstattet.");
+                }
+                default -> {
+                    System.out.println("Du hast verloren.");
+                    playerBalance -= currentBet;
+                }
             }
 
             if (playerBalance <= 0) {
                 System.out.println("\nGame Over. Du hast kein Geld mehr.");
                 break;
             }
+
+            System.out.println("Drücke Enter, um fortzufahren...");
+            scanner.nextLine();
+            clearConsole();
 
             currentBet *= 2;
             if (currentBet > playerBalance) {
@@ -48,13 +60,11 @@ public class logic {
 
     private void resetDeck() {
         deck = new ArrayList<>();
-        // Karten 2-10 jeweils 4-mal, 10 zusätzlich für Bube, Dame, König
         for (int i = 2; i <= 10; i++) {
             for (int j = 0; j < (i == 10 ? 16 : 4); j++) {
                 deck.add(i);
             }
         }
-        // Asse (11) viermal
         for (int j = 0; j < 4; j++) {
             deck.add(11);
         }
@@ -76,39 +86,50 @@ public class logic {
         dealerHand.add(drawCard());
 
         int playerSum = sumHand(playerHand);
-        int dealerSum = sumHand(dealerHand);
-
-        System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
-        System.out.println("Karte des Dealers: [" + dealerHand.get(0) + ", ?]");
-
-        if (playerSum == 21 && playerHand.size() == 2) {
-            return 2; // Blackjack
-        }
 
         while (true) {
+            clearConsole();
+
+            System.out.println("Karte des Dealers: [" + dealerHand.get(0) + ", ?]");
+            System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
+            
+
+            if (playerSum == 21 && playerHand.size() == 2) {
+                return 2; // Blackjack
+            }
+
             System.out.println("Möchtest du eine weitere Karte? (j/n)");
             String input = scanner.nextLine();
             if (!input.equalsIgnoreCase("j")) break;
             playerHand.add(drawCard());
             playerSum = sumHand(playerHand);
-            System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
             if (playerSum > 21) {
+                clearConsole();
+                System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
                 System.out.println("Du hast dich überkauft!");
                 return 0;
             }
         }
 
-        System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + dealerSum + ")");
-        while (dealerSum < 17) {
+        clearConsole();
+        System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
+        System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + sumHand(dealerHand) + ")");
+        while (sumHand(dealerHand) < 17) {
             dealerHand.add(drawCard());
-            dealerSum = sumHand(dealerHand);
             System.out.println("Dealer zieht eine Karte: " + dealerHand.get(dealerHand.size() - 1));
-            System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + dealerSum + ")");
+            System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + sumHand(dealerHand) + ")");
+            try {
+                Thread.sleep(1000); // Pause für 1 Sekunde, um den Dealerzug zu simulieren
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
         }
 
-        playerSum = sumHand(playerHand); // nach Spieler-Zug neu berechnen
+        int dealerSum = sumHand(dealerHand);
+        playerSum = sumHand(playerHand);
 
         if (dealerSum > 21 || playerSum > dealerSum) return 1;
+        if (dealerSum == playerSum) return 3;
         return 0;
     }
 
@@ -124,6 +145,19 @@ public class logic {
             aces--;
         }
         return sum;
+    }
+
+    private void clearConsole() {
+        try {
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 50; i++) System.out.println();
+        }
     }
 
     public static void main(String[] args) {
