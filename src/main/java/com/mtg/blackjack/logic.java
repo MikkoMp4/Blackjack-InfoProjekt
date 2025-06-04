@@ -1,5 +1,3 @@
-package com.mtg.blackjack;
-
 import java.util.*;
 
 public class logic {
@@ -14,6 +12,7 @@ public class logic {
         while (playerBalance > 0) {
             resetDeck();
 
+            clearConsole();
             System.out.println("\n--------------------------------");
             System.out.println("Aktuelles Guthaben: $" + playerBalance);
             System.out.println("Aktueller Einsatz: $" + currentBet);
@@ -38,6 +37,10 @@ public class logic {
                 break;
             }
 
+            System.out.println("Drücke Enter, um fortzufahren...");
+            scanner.nextLine();
+            clearConsole();
+
             currentBet *= 2;
             if (currentBet > playerBalance) {
                 currentBet = playerBalance;
@@ -48,13 +51,11 @@ public class logic {
 
     private void resetDeck() {
         deck = new ArrayList<>();
-        // Karten 2-10 jeweils 4-mal, 10 zusätzlich für Bube, Dame, König
         for (int i = 2; i <= 10; i++) {
             for (int j = 0; j < (i == 10 ? 16 : 4); j++) {
                 deck.add(i);
             }
         }
-        // Asse (11) viermal
         for (int j = 0; j < 4; j++) {
             deck.add(11);
         }
@@ -78,27 +79,30 @@ public class logic {
         int playerSum = sumHand(playerHand);
         int dealerSum = sumHand(dealerHand);
 
-        System.out.println("Karte des Dealers: [" + dealerHand.get(0) + ", ?]");
-        System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
-    
-
-        if (playerSum == 21 && playerHand.size() == 2) {
-            return 2; // Blackjack
-        }
-
         while (true) {
+            clearConsole();
+            System.out.println("Karte des Dealers: [" + dealerHand.get(0) + ", ?]");
+            System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
+            
+
+            if (playerSum == 21 && playerHand.size() == 2) {
+                return 2; // Blackjack
+            }
+
             System.out.println("Möchtest du eine weitere Karte? (j/n)");
             String input = scanner.nextLine();
             if (!input.equalsIgnoreCase("j")) break;
             playerHand.add(drawCard());
             playerSum = sumHand(playerHand);
-            System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
             if (playerSum > 21) {
+                clearConsole();
+                System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
                 System.out.println("Du hast dich überkauft!");
                 return 0;
             }
         }
 
+        clearConsole();
         System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + dealerSum + ")");
         while (dealerSum < 17) {
             dealerHand.add(drawCard());
@@ -107,8 +111,7 @@ public class logic {
             System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + dealerSum + ")");
         }
 
-        playerSum = sumHand(playerHand); // nach Spieler-Zug neu berechnen
-
+        playerSum = sumHand(playerHand);
         if (dealerSum > 21 || playerSum > dealerSum) return 1;
         return 0;
     }
@@ -125,6 +128,19 @@ public class logic {
             aces--;
         }
         return sum;
+    }
+
+    private void clearConsole() {
+        try {
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 50; i++) System.out.println();
+        }
     }
 
     public static void main(String[] args) {
