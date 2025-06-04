@@ -123,6 +123,7 @@ public class logic {
             } catch (Exception e) {
                 // TODO: handle exception
             }
+            //test
         }
 
         int dealerSum = sumHand(dealerHand);
