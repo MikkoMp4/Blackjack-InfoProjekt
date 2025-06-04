@@ -9,7 +9,7 @@ public class logic {
     private List<Integer> deck;
 
     public void startGame() {
-        System.out.println("Willkommen beim Blackjack-Spiel!");
+        System.out.println("Willkommen beim Jackblack-Spiel!");
 
         while (playerBalance > 0) {
             resetDeck();
