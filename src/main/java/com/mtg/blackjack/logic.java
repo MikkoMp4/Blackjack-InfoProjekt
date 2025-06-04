@@ -23,15 +23,22 @@ public class logic {
 
             int roundResult = playRound();
 
-            if (roundResult == 1) {
-                System.out.println("Du hast gewonnen!");
-                playerBalance += currentBet;
-            } else if (roundResult == 2) {
-                System.out.println("Blackjack! Du gewinnst 1.5x Einsatz!");
-                playerBalance += (int)(currentBet * 1.5);
-            } else {
-                System.out.println("Du hast verloren.");
-                playerBalance -= currentBet;
+            switch (roundResult) {
+                case 1 -> {
+                    System.out.println("Du hast gewonnen!");
+                    playerBalance += currentBet;
+                }
+                case 2 -> {
+                    System.out.println("Blackjack! Du gewinnst 1.5x Einsatz!");
+                    playerBalance += (int)(currentBet * 1.5);
+                }
+                case 3 -> {
+                    System.out.println("Unentschieden – dein Einsatz wird zurückerstattet.");
+                }
+                default -> {
+                    System.out.println("Du hast verloren.");
+                    playerBalance -= currentBet;
+                }
             }
 
             if (playerBalance <= 0) {
@@ -79,10 +86,10 @@ public class logic {
         dealerHand.add(drawCard());
 
         int playerSum = sumHand(playerHand);
-        int dealerSum = sumHand(dealerHand);
 
         while (true) {
             clearConsole();
+
             System.out.println("Karte des Dealers: [" + dealerHand.get(0) + ", ?]");
             System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
             
@@ -105,16 +112,19 @@ public class logic {
         }
 
         clearConsole();
-        System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + dealerSum + ")");
-        while (dealerSum < 17) {
+        System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
+        System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + sumHand(dealerHand) + ")");
+        while (sumHand(dealerHand) < 17) {
             dealerHand.add(drawCard());
-            dealerSum = sumHand(dealerHand);
             System.out.println("Dealer zieht eine Karte: " + dealerHand.get(dealerHand.size() - 1));
-            System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + dealerSum + ")");
+            System.out.println("Karten des Dealers: " + dealerHand + " (Summe: " + sumHand(dealerHand) + ")");
         }
 
+        int dealerSum = sumHand(dealerHand);
         playerSum = sumHand(playerHand);
+
         if (dealerSum > 21 || playerSum > dealerSum) return 1;
+        if (dealerSum == playerSum) return 3;
         return 0;
     }
 
