@@ -78,8 +78,9 @@ public class logic {
         int playerSum = sumHand(playerHand);
         int dealerSum = sumHand(dealerHand);
 
-        System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
         System.out.println("Karte des Dealers: [" + dealerHand.get(0) + ", ?]");
+        System.out.println("Deine Karten: " + playerHand + " (Summe: " + playerSum + ")");
+    
 
         if (playerSum == 21 && playerHand.size() == 2) {
             return 2; // Blackjack
