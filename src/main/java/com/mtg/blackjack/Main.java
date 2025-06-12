@@ -1,20 +1,18 @@
-package com.mtg.blackjack.View;
+package com.mtg.blackjack;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
-public class HelloFX extends Application {
+public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/view.fxml"));
-        Scene scene = new Scene(root, 400, 300);
+        Parent root = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/StartScreen.fxml"));
+        Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
-        stage.setTitle("JavaFX Maven App");
+        stage.setTitle("Jack Black");
         stage.show();
     }
 
