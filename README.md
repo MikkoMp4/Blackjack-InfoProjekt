@@ -18,7 +18,29 @@
    3.4) Dealeraktionen <br/>
    3.5) Wertung <br/>
    3.6) potentiell neue Runde <br/>
-   
+4) Spielende <br/>
+   4.1) Anzeige des Endstandes <br/>
+   4.2) Möglichkeit zum Neustart <br/>
+   4.3) Möglichkeit zum Beenden <br/>
+## Fortschritt
+### Kernfunktionalität
+- [x] <span style="color:green">**Grundlegende Spielmechanik**</span> <br/>
+- [x] <span style="color:green">**Kartenverteilung und -anzeige**</span> <br/>
+- [x] <span style="color:green">**Spieleraktionen (Hit, Stand)**</span> <br/>
+- [x] <span style="color:green">**Dealeraktionen**</span> <br/>
+- [x] <span style="color:green">**Wertungsberechnung**</span> <br/>
+- [x] <span style="color:green">**Geldverwaltung**</span> <br/>
+- [x] <span style="color:green">**Vollständiges Spielende**</span> <br/>
 
+### Benutzeroberfläche
+- [x] <span style="color:green">**Startbildschirm**</span> <br/>
+- [x] <span style="color:green">**UI-Verbesserungen**</span> <br/>
+- [x] <span style="color:green">**Animationen**</span> <br/>
+- [ ] <span style="color:red">**Responsive Design**</span> <br/>
 
-   
+### Spielerlebnis
+- [ ] <span style="color:red">**Tutorial**</span> <br/>
+- [ ] <span style="color:red">**Verschiedene Spielmodi**</span> <br/>
+- [x] <span style="color:green">**Highscore-System**</span> <br/>
+- [x] <span style="color:green">**Spielstatistiken**</span> <br/>
+- [ ] <span style="color:red">**Soundeffekte**</span> <br/>

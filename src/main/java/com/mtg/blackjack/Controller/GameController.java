@@ -1,6 +1,9 @@
 package com.mtg.blackjack.Controller;
 
+import com.mtg.blackjack.Model.HighScore;
 import com.mtg.blackjack.Model.Player;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,10 +11,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +36,7 @@ public class GameController {
     @FXML private Button hitButton;
     @FXML private Button standButton;
     @FXML private Button nextRoundButton;
+    @FXML private VBox mainContainer;
 
     private logic gameLogic;
     private Player player;
@@ -36,15 +44,60 @@ public class GameController {
     private int currentBet = 1;
     private boolean gameInProgress = false;
     private boolean dealerTurn = false;
+    private HighScore highScore;
 
     @FXML
     public void initialize() {
+        // Initialize game components
         gameLogic = new logic();
         player = new Player(100);
         dealerHand = new ArrayList<>();
+
+        // Load high scores
+        highScore = HighScore.loadHighScores();
+
+        // Apply UI improvements
+        applyUIEffects();
+
+        // Start the game
         updateBalanceDisplay();
         updateBetDisplay();
         startNewRound();
+    }
+
+    /**
+     * Apply visual effects to UI elements
+     */
+    private void applyUIEffects() {
+        // Add drop shadow to cards
+        DropShadow cardShadow = new DropShadow();
+        cardShadow.setColor(Color.BLACK);
+        cardShadow.setRadius(10);
+        dealerCardsBox.setEffect(cardShadow);
+        playerCardsBox.setEffect(cardShadow);
+
+        // Add style to buttons
+        for (Button button : new Button[]{hitButton, standButton, nextRoundButton}) {
+            button.setStyle(button.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+
+            // Add hover effect
+            button.setOnMouseEntered(e -> {
+                ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+                st.setToX(1.1);
+                st.setToY(1.1);
+                st.play();
+            });
+
+            button.setOnMouseExited(e -> {
+                ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+                st.setToX(1);
+                st.setToY(1);
+                st.play();
+            });
+        }
+
+        // Add style to game status label
+        gameStatusLabel.setStyle(gameStatusLabel.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.5), 10, 0, 0, 0);");
     }
 
     private void startNewRound() {
@@ -84,29 +137,95 @@ public class GameController {
         int playerSum = player.calculateHandSum();
 
         if (playerSum == 21 && player.getHand().size() == 2) {
+            // Show blackjack message with animation
             gameStatusLabel.setText("Blackjack! You win 1.5x your bet!");
+            animateGameStatus();
+
+            // Update player balance
             player.adjustBalance((int) (currentBet * 1.5));
             updateBalanceDisplay();
+
+            // Update statistics
+            highScore.incrementGamesPlayed();
+            highScore.incrementGamesWon();
+            highScore.incrementBlackjacks();
+            highScore.updateHighestBalance(player.getBalance());
+            highScore.saveHighScores();
+
             endRound();
         }
+    }
+
+    /**
+     * Animates the game status label
+     */
+    private void animateGameStatus() {
+        // Create a scale animation
+        ScaleTransition st = new ScaleTransition(Duration.millis(200), gameStatusLabel);
+        st.setFromX(1.0);
+        st.setFromY(1.0);
+        st.setToX(1.2);
+        st.setToY(1.2);
+        st.setCycleCount(2);
+        st.setAutoReverse(true);
+
+        // Create a fade animation
+        FadeTransition ft = new FadeTransition(Duration.millis(200), gameStatusLabel);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.7);
+        ft.setCycleCount(2);
+        ft.setAutoReverse(true);
+
+        // Play animations
+        st.play();
+        ft.play();
     }
 
     @FXML
     private void onHitClicked() {
         if (!gameInProgress) return;
 
-        // Player draws a card
-        player.addCardToHand(gameLogic.drawCard());
+        // Player draws a card with animation
+        int newCard = gameLogic.drawCard();
+        player.addCardToHand(newCard);
         updatePlayerCards();
+        animateNewCard();
 
         // Check if player busts
         int playerSum = player.calculateHandSum();
         if (playerSum > 21) {
             gameStatusLabel.setText("Bust! You lose.");
+            animateGameStatus();
+
+            // Update player balance
             player.adjustBalance(-currentBet);
             updateBalanceDisplay();
+
+            // Update statistics
+            highScore.incrementGamesPlayed();
+            highScore.updateHighestBalance(player.getBalance());
+            highScore.saveHighScores();
+
             endRound();
         }
+    }
+
+    /**
+     * Animates the newest card added
+     */
+    private void animateNewCard() {
+        if (playerCardsBox.getChildren().isEmpty()) return;
+
+        // Get the last card added
+        ImageView lastCard = (ImageView) playerCardsBox.getChildren().get(playerCardsBox.getChildren().size() - 1);
+
+        // Create and play a scale animation
+        ScaleTransition st = new ScaleTransition(Duration.millis(200), lastCard);
+        st.setFromX(0.8);
+        st.setFromY(0.8);
+        st.setToX(1.0);
+        st.setToY(1.0);
+        st.play();
     }
 
     @FXML
@@ -132,16 +251,29 @@ public class GameController {
         // Determine winner
         int playerSum = player.calculateHandSum();
         int dealerSum = gameLogic.sumHand(dealerHand);
+        boolean playerWon = false;
 
         if (dealerSum > 21 || playerSum > dealerSum) {
             gameStatusLabel.setText("You win!");
+            animateGameStatus();
             player.adjustBalance(currentBet);
+            playerWon = true;
         } else if (dealerSum == playerSum) {
             gameStatusLabel.setText("Push - it's a tie!");
+            animateGameStatus();
         } else {
             gameStatusLabel.setText("Dealer wins!");
+            animateGameStatus();
             player.adjustBalance(-currentBet);
         }
+
+        // Update statistics
+        highScore.incrementGamesPlayed();
+        if (playerWon) {
+            highScore.incrementGamesWon();
+        }
+        highScore.updateHighestBalance(player.getBalance());
+        highScore.saveHighScores();
 
         updateBalanceDisplay();
         endRound();
@@ -177,6 +309,28 @@ public class GameController {
 
             // Get the current stage
             Stage stage = (Stage) balanceLabel.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles the "View Statistics" button click
+     */
+    @FXML
+    private void onViewStatisticsClicked() {
+        try {
+            // Load the statistics screen
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mtg/blackjack/View/Statistics.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) balanceLabel.getScene().getWindow();
+
+            // Set the statistics scene
+            Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

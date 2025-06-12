@@ -54,12 +54,15 @@
                     style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 20;"/>
         </HBox>
 
-        <!-- Back to Menu Button -->
-        <Button text="Back to Menu" onAction="#onBackToMenuClicked"
-                style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 5 10;">
+        <!-- Navigation Buttons -->
+        <HBox alignment="CENTER" spacing="20">
+            <Button text="View Statistics" onAction="#onViewStatisticsClicked"
+                    style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 5 10;"/>
+            <Button text="Back to Menu" onAction="#onBackToMenuClicked"
+                    style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 5 10;"/>
             <VBox.margin>
                 <Insets top="20" />
             </VBox.margin>
-        </Button>
+        </HBox>
     </VBox>
 </AnchorPane>
