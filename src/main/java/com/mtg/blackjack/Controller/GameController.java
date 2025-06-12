@@ -48,39 +48,39 @@ public class GameController {
 
     @FXML
     public void initialize() {
-        // Initialize game components
+        // Initialisiert die Spiel-Logik und den Spieler
         gameLogic = new logic();
         player = new Player(100);
         dealerHand = new ArrayList<>();
 
-        // Load high scores
+        // Laden von high scores
         highScore = HighScore.loadHighScores();
 
-        // Apply UI improvements
+        // wendet UI improvements an
         applyUIEffects();
 
-        // Start the game
+        // Starten des Spiels
         updateBalanceDisplay();
         updateBetDisplay();
         startNewRound();
     }
 
     /**
-     * Apply visual effects to UI elements
+     * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
      */
     private void applyUIEffects() {
-        // Add drop shadow to cards
+        // Drop shadow für die Kartenboxen
         DropShadow cardShadow = new DropShadow();
         cardShadow.setColor(Color.BLACK);
         cardShadow.setRadius(10);
         dealerCardsBox.setEffect(cardShadow);
         playerCardsBox.setEffect(cardShadow);
 
-        // Add style to buttons
+        // Style für die Buttons
         for (Button button : new Button[]{hitButton, standButton, nextRoundButton}) {
             button.setStyle(button.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
 
-            // Add hover effect
+            // Hover effekt hinzufügen
             button.setOnMouseEntered(e -> {
                 ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
                 st.setToX(1.1);
@@ -96,17 +96,17 @@ public class GameController {
             });
         }
 
-        // Add style to game status label
+        // style zum gameStatusLabel hinzufügen
         gameStatusLabel.setStyle(gameStatusLabel.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.5), 10, 0, 0, 0);");
     }
 
     private void startNewRound() {
-        // Reset game state
+        // Reset spiel state
         gameInProgress = true;
         dealerTurn = false;
         gameStatusLabel.setText("");
 
-        // Clear hands
+        // Clear Hands
         player.resetHand();
         dealerHand.clear();
 
@@ -119,7 +119,7 @@ public class GameController {
         standButton.setDisable(false);
         nextRoundButton.setVisible(false);
 
-        // Deal initial cards
+        // Dealt die initial Karten
         player.addCardToHand(gameLogic.drawCard());
         player.addCardToHand(gameLogic.drawCard());
         dealerHand.add(gameLogic.drawCard());
@@ -127,9 +127,9 @@ public class GameController {
 
         // Update UI
         updatePlayerCards();
-        updateDealerCards(true); // Hide dealer's second card
+        updateDealerCards(true); // Versteckt die zweite Karte des Dealers
 
-        // Check for blackjack
+        // Für Blackjack checken
         checkForBlackjack();
     }
 
@@ -137,15 +137,15 @@ public class GameController {
         int playerSum = player.calculateHandSum();
 
         if (playerSum == 21 && player.getHand().size() == 2) {
-            // Show blackjack message with animation
+            // Zeigen der Blackjack Nachricht mit Animation
             gameStatusLabel.setText("Blackjack! You win 1.5x your bet!");
             animateGameStatus();
 
-            // Update player balance
+            // Reichtum update
             player.adjustBalance((int) (currentBet * 1.5));
             updateBalanceDisplay();
 
-            // Update statistics
+            // Stats update
             highScore.incrementGamesPlayed();
             highScore.incrementGamesWon();
             highScore.incrementBlackjacks();
@@ -157,10 +157,10 @@ public class GameController {
     }
 
     /**
-     * Animates the game status label
+     * Animiert den Spielstatus-Label, um visuelles Feedback zu geben
      */
     private void animateGameStatus() {
-        // Create a scale animation
+        // Erstellen einer Scale Animation
         ScaleTransition st = new ScaleTransition(Duration.millis(200), gameStatusLabel);
         st.setFromX(1.0);
         st.setFromY(1.0);
@@ -169,14 +169,14 @@ public class GameController {
         st.setCycleCount(2);
         st.setAutoReverse(true);
 
-        // Create a fade animation
+        // Fade Animation
         FadeTransition ft = new FadeTransition(Duration.millis(200), gameStatusLabel);
         ft.setFromValue(1.0);
         ft.setToValue(0.7);
         ft.setCycleCount(2);
         ft.setAutoReverse(true);
 
-        // Play animations
+        // Spielt fancy Animationen ab
         st.play();
         ft.play();
     }
@@ -185,23 +185,23 @@ public class GameController {
     private void onHitClicked() {
         if (!gameInProgress) return;
 
-        // Player draws a card with animation
+        // Spieler zieht eine Karte mit Animation
         int newCard = gameLogic.drawCard();
         player.addCardToHand(newCard);
         updatePlayerCards();
         animateNewCard();
 
-        // Check if player busts
+        // Checken ob der Spieler besser nie nach Vegas fliegen sollte (checkt ob der Spieler über 21 ist)
         int playerSum = player.calculateHandSum();
         if (playerSum > 21) {
             gameStatusLabel.setText("Bust! You lose.");
             animateGameStatus();
 
-            // Update player balance
+            // Updated DEN REICHTUM DES SPIELERS
             player.adjustBalance(-currentBet);
             updateBalanceDisplay();
 
-            // Update statistics
+            // Updated die Statistik
             highScore.incrementGamesPlayed();
             highScore.updateHighestBalance(player.getBalance());
             highScore.saveHighScores();
@@ -211,15 +211,15 @@ public class GameController {
     }
 
     /**
-     * Animates the newest card added
+     * Animiert die neue Karte, die der Spieler gezogen hat
      */
     private void animateNewCard() {
         if (playerCardsBox.getChildren().isEmpty()) return;
 
-        // Get the last card added
+        // Getted die letzte Karte im PlayerCardsBox
         ImageView lastCard = (ImageView) playerCardsBox.getChildren().get(playerCardsBox.getChildren().size() - 1);
 
-        // Create and play a scale animation
+        // Erstellt und spielt eine ScaleTransition Animation
         ScaleTransition st = new ScaleTransition(Duration.millis(200), lastCard);
         st.setFromX(0.8);
         st.setFromY(0.8);
@@ -233,14 +233,14 @@ public class GameController {
         if (!gameInProgress) return;
 
         dealerTurn = true;
-        updateDealerCards(false); // Show dealer's hidden card
+        updateDealerCards(false); // Zeigt die zweite Karte des Dealers
 
-        // Dealer draws cards until sum is at least 17
+        // Dealer zieht Karten bis er mindestens 17 hat
         while (gameLogic.sumHand(dealerHand) < 17) {
             dealerHand.add(gameLogic.drawCard());
             updateDealerCards(false);
 
-            // Add a small delay for visual effect
+            // einen kleinen Delay einfügen, um die Animation zu sehen
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -248,7 +248,7 @@ public class GameController {
             }
         }
 
-        // Determine winner
+        // Gewinner bestimmen
         int playerSum = player.calculateHandSum();
         int dealerSum = gameLogic.sumHand(dealerHand);
         boolean playerWon = false;
@@ -267,7 +267,7 @@ public class GameController {
             player.adjustBalance(-currentBet);
         }
 
-        // Update statistics
+        // Updaten der Statistik
         highScore.incrementGamesPlayed();
         if (playerWon) {
             highScore.incrementGamesWon();
@@ -281,14 +281,14 @@ public class GameController {
 
     @FXML
     private void onNextRoundClicked() {
-        // Double the bet for the next round (if possible)
+        // Verdopple den aktuellen Einsatz (wenn möglich)
         currentBet *= 2;
         if (currentBet > player.getBalance()) {
             currentBet = player.getBalance();
         }
         updateBetDisplay();
 
-        // Check if player has money left
+        // Checken ob der Spieler noch Geld hat
         if (player.getBalance() <= 0) {
             gameStatusLabel.setText("Game Over! You're out of money.");
             hitButton.setDisable(true);
@@ -303,36 +303,38 @@ public class GameController {
     @FXML
     private void onBackToMenuClicked() {
         try {
-            // Load the start screen
+            // Lädt die Start-Szene
             Parent root = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/StartScreen.fxml"));
             Scene scene = new Scene(root, 800, 600);
 
-            // Get the current stage
+            // Getted die aktuelle Stage
             Stage stage = (Stage) balanceLabel.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
+            stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Handles the "View Statistics" button click
+     * Handelt den "View Statistics" button click
      */
     @FXML
     private void onViewStatisticsClicked() {
         try {
-            // Load the statistics screen
+            // Lädt die Statistics-Szene
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mtg/blackjack/View/Statistics.fxml"));
             Parent root = loader.load();
 
-            // Get the current stage
+            // Getted die aktuelle Stage
             Stage stage = (Stage) balanceLabel.getScene().getWindow();
 
-            // Set the statistics scene
+            // Setzt die statistics scene
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
             stage.show();
+            stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -350,13 +352,13 @@ public class GameController {
     private void updateDealerCards(boolean hideSecondCard) {
         dealerCardsBox.getChildren().clear();
 
-        // First card is always visible
+        // Erste Karte wird immer angezeigt
         if (!dealerHand.isEmpty()) {
             ImageView firstCardView = createCardImageView(dealerHand.get(0));
             dealerCardsBox.getChildren().add(firstCardView);
         }
 
-        // Second card might be hidden
+        // Zweite Karte wird vielleicht versteckt
         if (dealerHand.size() > 1) {
             if (hideSecondCard) {
                 ImageView hiddenCardView = createCardBackImageView();
@@ -373,33 +375,33 @@ public class GameController {
     }
 
     private ImageView createCardImageView(int cardValue) {
-        // Create a card image view based on the card value
+        // Erstellt ein ImageView für die Karte
         ImageView cardView = new ImageView();
         cardView.setFitHeight(100);
         cardView.setFitWidth(70);
         cardView.setPreserveRatio(true);
 
-        // Load the appropriate card image based on the card value
+        // Lädt das richtige Kartenbild für den Kartenwert
         String cardName = getCardImageName(cardValue);
         try {
             Image cardImage = new Image(getClass().getResourceAsStream("/img/cards/" + cardName));
             cardView.setImage(cardImage);
         } catch (Exception e) {
-            // If image loading fails, create a simple text representation
+            // Falls das Bild nicht geladen werden kann, wird eine einfache Textdarstellung verwendet
             Label cardLabel = new Label(String.valueOf(cardValue));
             cardLabel.setStyle("-fx-background-color: white; -fx-padding: 40 25; -fx-border-color: black;");
-            // We can't directly return a Label, so we'll keep the ImageView approach
+            // man kann das Label nicht direkt darstellen, also erstellen wir ein ImageView mit dem Label
         }
 
         return cardView;
     }
 
     private String getCardImageName(int cardValue) {
-        // Map card values to image file names
+        // Mappen von Kartenwerten zu Bildnamen
         if (cardValue == 11) {
-            return "ace_spades.png"; // Using spades as default suit
+            return "ace_spades.png"; // Piek als Standard-Symbol
         } else {
-            return cardValue + "_spades.png"; // Using spades as default suit
+            return cardValue + "_spades.png"; // Piek als Standard-Symbol
         }
     }
 
@@ -409,12 +411,12 @@ public class GameController {
         cardView.setFitWidth(70);
         cardView.setPreserveRatio(true);
 
-        // Load the card back image
+        // Lädt das Kartenrückenbild
         try {
             Image cardImage = new Image(getClass().getResourceAsStream("/img/cards/back_black_basic.png"));
             cardView.setImage(cardImage);
         } catch (Exception e) {
-            // If image loading fails, create a simple representation
+            // Falls das Bild nicht geladen werden kann, wird eine einfache Darstellung verwendet
             cardView.setStyle("-fx-background-color: black; -fx-border-color: white;");
         }
 

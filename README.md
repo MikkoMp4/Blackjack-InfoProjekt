@@ -27,20 +27,28 @@
 - [x] <span style="color:green">**Grundlegende Spielmechanik**</span> <br/>
 - [x] <span style="color:green">**Kartenverteilung und -anzeige**</span> <br/>
 - [x] <span style="color:green">**Spieleraktionen (Hit, Stand)**</span> <br/>
-- [x] <span style="color:green">**Dealeraktionen**</span> <br/>
+- [x] <span style="color:green">**Dealeraktionen (Hit, Stand)**</span> <br/>
+- [ ] <span style="color:red">**Auslösen von Spieleraktionen durch Keyboard Shortcuts**</span> <br/>
+- [ ] <span style="color:red">**Möglichkeit zum ändern der Keyboard Mappings**</span> <br/>
 - [x] <span style="color:green">**Wertungsberechnung**</span> <br/>
 - [x] <span style="color:green">**Geldverwaltung**</span> <br/>
 - [x] <span style="color:green">**Vollständiges Spielende**</span> <br/>
 
 ### Benutzeroberfläche
 - [x] <span style="color:green">**Startbildschirm**</span> <br/>
+- [x] <span style="color:yellow">**Spieloberfläche**</span> <br/>
+  - [ ] <span style="color:red">**Perfekter Startbildschirm**</span> <br/>
+  - [ ] <span style="color:red">**Game Bildchirm nach Vorlage (momentan nur vorläufig)**</span> <br/>
+  - [ ] <span style="color:red">**Andere Bildschirme nach Vorlage/Einheitlich (bisher alle nur vorläufig)**</span> <br/>
 - [x] <span style="color:green">**UI-Verbesserungen**</span> <br/>
-- [x] <span style="color:green">**Animationen**</span> <br/>
+- [ ] <span style="color:red">**UI-Einheitliche Größe (soll maximized sein, aber stellt sich im game immer wieder zurück momentan)**</span> <br/>
+- [x] <span style="color:yellow">**Animationen**</span> <br/>
 - [ ] <span style="color:red">**Responsive Design**</span> <br/>
 
 ### Spielerlebnis
 - [ ] <span style="color:red">**Tutorial**</span> <br/>
 - [ ] <span style="color:red">**Verschiedene Spielmodi**</span> <br/>
-- [x] <span style="color:green">**Highscore-System**</span> <br/>
-- [x] <span style="color:green">**Spielstatistiken**</span> <br/>
+- [x] <span style="color:yellow">**Highscore-System (bessere implementation)**</span> <br/>
+- [x] <span style="color:yellow">**Spielstatistiken (backend: ja/frontend: nein (UI ist schlecht implementiert)**</span> <br/>
 - [ ] <span style="color:red">**Soundeffekte**</span> <br/>
+- [ ] <span style="color:red">**abgerundetes Design**</span> <br/>
