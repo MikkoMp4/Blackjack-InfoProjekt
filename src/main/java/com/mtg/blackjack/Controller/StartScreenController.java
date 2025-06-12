@@ -1,12 +1,18 @@
 package com.mtg.blackjack.Controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 public class StartScreenController {
 
     @FXML private VBox rootVBox;  // das ist unser geankertes VBox
@@ -38,12 +44,42 @@ public class StartScreenController {
     @FXML
     private void onEndlessClicked() {
         System.out.println("Endlos-Modus gestartet");
-        // TODO: Endlosmodus starten
+
+        try {
+            // Load the game screen (same as normal mode for now)
+            Parent gameRoot = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/Game.fxml"));
+            Scene gameScene = new Scene(gameRoot, 800, 600);
+
+            // Get the current stage
+            Stage stage = (Stage) endlessButton.getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(gameScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading Game.fxml: " + e.getMessage());
+        }
     }
 
     @FXML
     private void onNormalClicked() {
         System.out.println("Normaler Modus gestartet");
-        // TODO: Normalmodus starten
+
+        try {
+            // Load the game screen
+            Parent gameRoot = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/Game.fxml"));
+            Scene gameScene = new Scene(gameRoot, 800, 600);
+
+            // Get the current stage
+            Stage stage = (Stage) normalButton.getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(gameScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading Game.fxml: " + e.getMessage());
+        }
     }
 }
