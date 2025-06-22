@@ -29,13 +29,13 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>21.0.4</version>
+            <version>24.0.1</version>  <!-- Je nach Betriebssystem kann die Version variieren -->
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>24-ea+5</version>
+            <version>24.0.1</version>  <!-- Je nach Betriebssystem kann die Version variieren -->
             <classifier>win</classifier>
         </dependency>
 
@@ -67,7 +67,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.mtg.blackjack.View.HelloFX</mainClass>
+                    <mainClass>com.mtg.blackjack.Main</mainClass>
                 </configuration>
             </plugin>
 
