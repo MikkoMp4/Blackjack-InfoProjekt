@@ -74,7 +74,12 @@
             <VBox fx:id="sidebar"
                 prefWidth="266"
                 style="-fx-background-color: #222; -fx-border-color: #111; -fx-border-width: 0 0 0 8;">
-                <VBox style="-fx-background-color: d63f34; -fx-border-color: #111; -fx-border-width: 0 0 8 0;" VBox.vgrow="ALWAYS"/>
+                <StackPane VBox.vgrow="ALWAYS">
+                    <ImageView fx:id="redRectImage"
+                            
+                            fitWidth="266"
+                            preserveRatio="false"/>
+                </StackPane>
                 <VBox style="-fx-background-color: #2196F3;" VBox.vgrow="ALWAYS"/>
             </VBox>
         </HBox>

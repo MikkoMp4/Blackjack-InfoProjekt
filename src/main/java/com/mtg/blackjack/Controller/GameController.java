@@ -37,6 +37,7 @@ public class GameController {
     @FXML private Button standButton;
     @FXML private Button nextRoundButton;
     @FXML private VBox mainContainer;
+    @FXML private ImageView redRectImage;
 
     private logic gameLogic;
     private Player player;
@@ -63,6 +64,9 @@ public class GameController {
         updateBalanceDisplay();
         updateBetDisplay();
         startNewRound();
+
+        // Setzt das rote Rechteck-Bild
+        redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck.png")));
     }
 
     /**
