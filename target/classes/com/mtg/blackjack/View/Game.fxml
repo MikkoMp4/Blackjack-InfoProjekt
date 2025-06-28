@@ -46,7 +46,12 @@
                 </VBox>
 
                 <!-- Game Status -->
-                <Label fx:id="gameStatusLabel" text="" style="-fx-text-fill: white; -fx-font-size: 20px;"/>
+                <Label fx:id="gameStatusLabel" 
+                       text="" 
+                       alignment="CENTER"
+                       textAlignment="CENTER"
+                       maxWidth="Infinity"
+                       style="-fx-text-fill: white; -fx-font-size: 20px;"/>
 
                 <!-- Game Controls -->
                 <HBox alignment="CENTER" spacing="20">
@@ -74,12 +79,12 @@
             <VBox fx:id="sidebar"
                 prefWidth="266"
                 style="-fx-background-color: #222; -fx-border-color: #111; -fx-border-width: 0 0 0 8;">
-                <StackPane VBox.vgrow="ALWAYS">
                     <ImageView fx:id="redRectImage"
-                            
                             fitWidth="266"
-                            preserveRatio="false"/>
-                </StackPane>
+                            preserveRatio="false"
+                            VBox.vgrow="ALWAYS"/>
+                    <Pane minHeight="8" maxHeight="8" prefHeight="8"
+                          style="-fx-background-color: #111;"/>
                 <VBox style="-fx-background-color: #2196F3;" VBox.vgrow="ALWAYS"/>
             </VBox>
         </HBox>

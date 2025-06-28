@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -64,9 +65,9 @@ public class GameController {
         updateBalanceDisplay();
         updateBetDisplay();
         startNewRound();
+        
+        redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck3.png")));
 
-        // Setzt das rote Rechteck-Bild
-        redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck.png")));
     }
 
     /**
