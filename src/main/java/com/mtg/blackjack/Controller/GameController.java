@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +19,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -44,7 +45,8 @@ public class GameController {
     @FXML private StackPane imageStack;
     @FXML private VBox blueBox; 
     @FXML private ImageView redRectImage;
-     @FXML private ImageView personImage;
+    @FXML private ImageView personImage;
+    @FXML private Label dialogLabel;
 
 
     private logic gameLogic;
@@ -74,12 +76,37 @@ public class GameController {
         // Starten des Spiels
         updateBalanceDisplay();
         updateBetDisplay();
-        startNewRound();
-        
+
         redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck3.png")));
         personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+
+        showIntroMessages();
     }
 
+        public void showIntroMessages() {
+        String[] messages = {
+            "Willkommen bei Blackjack!",
+            "Sie starten mit 100 Euro.",
+            "Verdienen Sie 200 Euro um zu gewinnen.",
+            "Einsätze werden nach jeder Runde verdoppelt.",
+            "Ich wünsche Ihnen viel Glück."
+        };
+
+        showMessagesSequentially(messages, 0);
+        
+    }
+
+    private void showMessagesSequentially(String[] messages, int index) {
+        if (index >= messages.length) {
+            startNewRound();
+            return;
+        }
+
+        dialog(messages[index]);
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(e -> showMessagesSequentially(messages, index + 1));
+        pause.play();
+    }
 
     /**
      * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
@@ -115,6 +142,8 @@ public class GameController {
         // style zum gameStatusLabel hinzufügen
         gameStatusLabel.setStyle(gameStatusLabel.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.5), 10, 0, 0, 0);");
     }
+
+
 
     private void startNewRound() {
         // Reset spiel state
@@ -454,5 +483,22 @@ public class GameController {
         hitButton.setDisable(true);
         standButton.setDisable(true);
         nextRoundButton.setVisible(true);
+    }
+
+    public void warten(int m) {
+        try {
+            Thread.sleep(m);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void dialog(String message) {
+        dialogLabel.setText(message);
+        PauseTransition pause = new PauseTransition(Duration.millis(message.length() * 60));
+        pause.setOnFinished(e -> {
+            // Hier kannst du nach der Pause etwas machen, falls nötig
+        });
+        pause.play();
     }
 }

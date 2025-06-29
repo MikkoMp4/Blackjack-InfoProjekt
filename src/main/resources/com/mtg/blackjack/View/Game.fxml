@@ -74,7 +74,7 @@
                     prefHeight="70"
                     style="-fx-background-color: #111; -fx-padding: 10;">
                     <Label fx:id="dialogLabel"
-                        text="Hier steht der Dialogtext"
+                        text=""
                         style="-fx-text-fill: white; -fx-font-size: 16px;"/>
                 </HBox>
             </VBox>
