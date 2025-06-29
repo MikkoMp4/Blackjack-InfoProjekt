@@ -30,6 +30,7 @@ public class GameController {
 
     @FXML private Label balanceLabel;
     @FXML private Label betLabel;
+    @FXML private Label roundLabel;
     @FXML private HBox dealerCardsBox;
     @FXML private Label dealerSumLabel;
     @FXML private HBox playerCardsBox;
@@ -50,9 +51,12 @@ public class GameController {
     private Player player;
     private List<Integer> dealerHand;
     private int currentBet = 1;
+    private int round = 1;
     private boolean gameInProgress = false;
     private boolean dealerTurn = false;
     private HighScore highScore;
+
+    
 
     @FXML
     public void initialize() {
@@ -75,6 +79,7 @@ public class GameController {
         redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck3.png")));
         personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
     }
+
 
     /**
      * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
@@ -116,6 +121,7 @@ public class GameController {
         gameInProgress = true;
         dealerTurn = false;
         gameStatusLabel.setText("");
+        roundLabel.setText(String.valueOf(round));
 
         // Clear Hands
         player.resetHand();
@@ -308,6 +314,7 @@ public class GameController {
             return;
         }
 
+        round++;
         startNewRound();
     }
 
