@@ -98,11 +98,24 @@ public class GameController {
 
     private void showMessagesSequentially(String[] messages, int index) {
         if (index >= messages.length) {
+            personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
             startNewRound();
             return;
         }
 
         dialog(messages[index]);
+
+        // Zeige zuerst Person1
+        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+
+        // Nach 0.5 Sekunden auf Person3 wechseln
+        PauseTransition switchToPerson3 = new PauseTransition(Duration.seconds(0.5));
+        switchToPerson3.setOnFinished(e -> 
+            personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person3.png")))
+        );
+        switchToPerson3.play();
+
+         // Nach 3 Sekunden nächste Nachricht und zurück zu Person1
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(e -> showMessagesSequentially(messages, index + 1));
         pause.play();
