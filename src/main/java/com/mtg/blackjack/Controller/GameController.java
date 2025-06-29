@@ -16,6 +16,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -38,7 +39,12 @@ public class GameController {
     @FXML private Button standButton;
     @FXML private Button nextRoundButton;
     @FXML private VBox mainContainer;
+    @FXML private VBox sidebar;
+    @FXML private StackPane imageStack;
+    @FXML private VBox blueBox; 
     @FXML private ImageView redRectImage;
+     @FXML private ImageView personImage;
+
 
     private logic gameLogic;
     private Player player;
@@ -67,7 +73,7 @@ public class GameController {
         startNewRound();
         
         redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck3.png")));
-
+        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
     }
 
     /**
