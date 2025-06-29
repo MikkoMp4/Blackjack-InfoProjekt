@@ -21,6 +21,20 @@
             <VBox fx:id="mainGameArea" style="-fx-background-color: #4c4c4c;" HBox.hgrow="ALWAYS">
 
                 <Pane minHeight="25" maxHeight="25" prefHeight="25" style="-fx-background-color: transparent;"/>
+
+                <!-- Dialogbox am oberen Rand -->
+                <HBox fx:id="dialogBox"
+                    alignment="CENTER"
+                    prefHeight="70"
+                    style="-fx-background-color: #111; -fx-padding: 10;">
+                    <Label fx:id="dialogLabel"
+                        text=""
+                        textAlignment="CENTER"
+                        style="-fx-text-fill: white; -fx-font-size: 16px;"/>
+                </HBox>
+
+                <Pane minHeight="25" maxHeight="25" prefHeight="25" style="-fx-background-color: transparent;"/>
+
                 <!-- Dealer's Cards -->
                 <VBox alignment="CENTER" spacing="10">
                     <Label text="Dealer's Cards" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
@@ -67,16 +81,9 @@
                         <Insets top="20" />
                     </VBox.margin>
                 </HBox>
-                 <!-- Schwarze Dialogbox am unteren Rand -->
+
                  <Pane VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;"/>
-                <HBox fx:id="dialogBox"
-                    alignment="CENTER_LEFT"
-                    prefHeight="70"
-                    style="-fx-background-color: #111; -fx-padding: 10;">
-                    <Label fx:id="dialogLabel"
-                        text=""
-                        style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-                </HBox>
+                
             </VBox>
 
             <!-- Dunkelgrauer Balken rechts (1/3 Breite) -->

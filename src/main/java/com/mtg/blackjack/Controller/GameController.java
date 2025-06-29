@@ -4,6 +4,8 @@ import com.mtg.blackjack.Model.HighScore;
 import com.mtg.blackjack.Model.Player;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,6 +59,7 @@ public class GameController {
     private boolean gameInProgress = false;
     private boolean dealerTurn = false;
     private HighScore highScore;
+    private Timeline talkingTimeline;
 
     
 
@@ -89,38 +92,63 @@ public class GameController {
             "Sie starten mit 100 Euro.",
             "Verdienen Sie 200 Euro um zu gewinnen.",
             "Einsätze werden nach jeder Runde verdoppelt.",
-            "Ich wünsche Ihnen viel Glück."
+            "Ich wünsche Ihnen viel Glück.",
         };
 
         showMessagesSequentially(messages, 0);
         
     }
 
-    private void showMessagesSequentially(String[] messages, int index) {
+   private void showMessagesSequentially(String[] messages, int index) {
+        if (talkingTimeline != null) {
+            talkingTimeline.stop();
+        }
+
         if (index >= messages.length) {
             personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
-            startNewRound();
+            dialog("");
+            showPerson2ThenStartRound();
             return;
         }
 
         dialog(messages[index]);
 
-        // Zeige zuerst Person1
-        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
-
-        // Nach 0.5 Sekunden auf Person3 wechseln
-        PauseTransition switchToPerson3 = new PauseTransition(Duration.seconds(0.5));
-        switchToPerson3.setOnFinished(e -> 
-            personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person3.png")))
+        // Animation: alle 0,2s Bild wechseln
+        talkingTimeline = new Timeline();
+        final boolean[] toggle = {false};
+        talkingTimeline.getKeyFrames().add(
+            new KeyFrame(Duration.seconds(0.2), e -> {
+                if (toggle[0]) {
+                    personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+                } else {
+                    personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person3.png")));
+                }
+                toggle[0] = !toggle[0];
+            })
         );
-        switchToPerson3.play();
+        talkingTimeline.setCycleCount(Timeline.INDEFINITE);
+        talkingTimeline.play();
 
-         // Nach 3 Sekunden nächste Nachricht und zurück zu Person1
+        // Nach 3 Sekunden nächste Nachricht und Animation stoppen
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(e -> showMessagesSequentially(messages, index + 1));
+        pause.setOnFinished(e -> {
+            talkingTimeline.stop();
+            personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+            showMessagesSequentially(messages, index + 1);
+        });
         pause.play();
     }
 
+    //Karten austeilen Animation
+    private void showPerson2ThenStartRound() {
+    personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person2.png")));
+    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+    pause.setOnFinished(e -> {
+        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+        startNewRound();
+    });
+    pause.play();
+}
     /**
      * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
      */
@@ -357,7 +385,7 @@ public class GameController {
         }
 
         round++;
-        startNewRound();
+        showPerson2ThenStartRound();
     }
 
     @FXML
