@@ -30,7 +30,7 @@
                     <Label fx:id="dialogLabel"
                         text=""
                         textAlignment="CENTER"
-                        style="-fx-text-fill: white; -fx-font-size: 16px;"/>
+                        style="-fx-text-fill: white; -fx-font-size: 18px;"/>
                 </HBox>
 
                 <Pane minHeight="25" maxHeight="25" prefHeight="25" style="-fx-background-color: transparent;"/>
@@ -60,7 +60,9 @@
                        textAlignment="CENTER"
                        maxWidth="Infinity"
                        style="-fx-text-fill: white; -fx-font-size: 20px;"/>
-                <Pane minHeight="20" maxHeight="20" prefHeight="20" style="-fx-background-color: transparent;"/>
+                
+                <Pane minHeight="1" maxHeight="1" prefHeight="1" style="-fx-background-color: transparent;"/>
+
                 <!-- Game Controls -->
                 <HBox alignment="CENTER" spacing="20">
                     <Button fx:id="hitButton" text="Hit" onAction="#onHitClicked"
@@ -117,11 +119,19 @@
                             </HBox>
 
                             <HBox alignment="CENTER" spacing="5">
-                                <Label text="Runde: " style="-fx-text-fill: black; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <Label text="Round: " style="-fx-text-fill: black; -fx-font-size: 18px; -fx-font-weight: bold;"/>
                                 <Label fx:id="roundLabel" text="1" style="-fx-text-fill: black; -fx-font-size: 18px; -fx-font-weight: bold;"/>
                             </HBox>
                         </VBox>
                 </VBox>
             </VBox>
         </HBox>
+    <Pane fx:id="blackOverlay"
+          style="-fx-background-color: black;"
+          opacity="0"
+          pickOnBounds="false"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"/>
 </AnchorPane>

@@ -44,17 +44,14 @@ public class StartScreenController {
     @FXML
     private void onEndlessClicked() {
         System.out.println("Endlos-Modus gestartet");
-
         try {
-            // Läd den Game-Screen (für den Endlos-Modus)
-            Parent gameRoot = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/Game.fxml"));
-            Scene gameScene = new Scene(gameRoot, 800, 600);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mtg/blackjack/View/Game.fxml"));
+            Parent gameRoot = loader.load();
+            GameController controller = loader.getController();
+            controller.setEndlessMode(true); // Endlos-Modus aktivieren
 
-            // Getted die aktuelle Stage
             Stage stage = (Stage) endlessButton.getScene().getWindow();
-
-            // Setzt die neue Szene
-            stage.setScene(gameScene);
+            stage.setScene(new Scene(gameRoot, 800, 600));
             stage.show();
             stage.setMaximized(true);
         } catch (IOException e) {
@@ -66,17 +63,14 @@ public class StartScreenController {
     @FXML
     private void onNormalClicked() {
         System.out.println("Normaler Modus gestartet");
-
         try {
-            // Lädt den Game-Screen (für den normalen Modus)
-            Parent gameRoot = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/Game.fxml"));
-            Scene gameScene = new Scene(gameRoot, 800, 600);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mtg/blackjack/View/Game.fxml"));
+            Parent gameRoot = loader.load();
+            GameController controller = loader.getController();
+            controller.setEndlessMode(false); // Normal-Modus
 
-            // Getted die aktuelle Stage
             Stage stage = (Stage) normalButton.getScene().getWindow();
-
-            // Setted die neue Szene
-            stage.setScene(gameScene);
+            stage.setScene(new Scene(gameRoot, 800, 600));
             stage.show();
             stage.setMaximized(true);
         } catch (IOException e) {

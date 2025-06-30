@@ -17,6 +17,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,6 +50,7 @@ public class GameController {
     @FXML private ImageView redRectImage;
     @FXML private ImageView personImage;
     @FXML private Label dialogLabel;
+    @FXML private Pane blackOverlay;
 
 
     private logic gameLogic;
@@ -60,6 +62,8 @@ public class GameController {
     private boolean dealerTurn = false;
     private HighScore highScore;
     private Timeline talkingTimeline;
+    private boolean endlessMode = false;
+    
 
     
 
@@ -69,6 +73,9 @@ public class GameController {
         gameLogic = new logic();
         player = new Player(100);
         dealerHand = new ArrayList<>();
+
+        // Overlay darf am Anfang keine Klicks blockieren!
+         blackOverlay.setMouseTransparent(true);
 
         // Laden von high scores
         highScore = HighScore.loadHighScores();
@@ -83,19 +90,20 @@ public class GameController {
         redRectImage.setImage(new Image(getClass().getResourceAsStream("/img/RotesRechteck3.png")));
         personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
 
-        showIntroMessages();
+        //showIntroMessages();
     }
 
         public void showIntroMessages() {
-        String[] messages = {
-            "Willkommen bei Blackjack!",
-            "Sie starten mit 100 Euro.",
-            "Verdienen Sie 200 Euro um zu gewinnen.",
-            "Einsätze werden nach jeder Runde verdoppelt.",
-            "Ich wünsche Ihnen viel Glück.",
-        };
+        List<String> messages = new ArrayList<>();
+        messages.add("Welcome to Blackjack!");
+        messages.add("You start with 100 Dollars.");
+        if (!endlessMode) {
+            messages.add("Earn 200 Dollars to win.");
+        }
+        messages.add("Bets are doubled after each round.");
+        messages.add("I wish you good luck.");
 
-        showMessagesSequentially(messages, 0);
+        showMessagesSequentially(messages.toArray(new String[0]), 0);
         
     }
 
@@ -141,6 +149,12 @@ public class GameController {
 
     //Karten austeilen Animation
     private void showPerson2ThenStartRound() {
+    // Stoppe alle laufenden Animationen, die das Bild verändern könnten
+    if (talkingTimeline != null) {
+        talkingTimeline.stop();
+    }
+    // Falls du weitere Timelines für Person-Animationen hast, stoppe sie hier ebenfalls
+
     personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person2.png")));
     PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
     pause.setOnFinished(e -> {
@@ -148,7 +162,27 @@ public class GameController {
         startNewRound();
     });
     pause.play();
-}
+    }
+
+    private void animatePersonImage(int repeats) {
+    // repeats = wie oft Person3/Person1 abwechselnd gezeigt wird, immer mit 0,2s Abstand
+    Timeline timeline = new Timeline();
+    for (int i = 0; i < repeats * 2; i++) {
+        final int idx = i;
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.2 * i), e -> {
+            if (idx % 2 == 0) {
+                personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person3.png")));
+            } else {
+                personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+            }
+        }));
+    }
+    // Am Ende wieder Person1 setzen
+    timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.2 * repeats * 2), e -> {
+        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+    }));
+    timeline.play();
+    }
 
 /**
  * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
@@ -185,6 +219,10 @@ private void applyUIEffects() {
         gameStatusLabel.setStyle(gameStatusLabel.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.5), 10, 0, 0, 0);");
     }
 
+    public void setEndlessMode(boolean endlessMode) {
+    this.endlessMode = endlessMode;
+    showIntroMessages(); // <-- HIER aufrufen!
+    }
 
 
     private void startNewRound() {
@@ -228,6 +266,7 @@ private void applyUIEffects() {
             // Zeigen der Blackjack Nachricht mit Animation
             dialogLabel.setText("Blackjack! You win 1.5x your bet!");
             animateGameStatus();
+            animatePersonImage(3);
 
             // Reichtum update
             player.adjustBalance((int) (currentBet * 1.5));
@@ -239,6 +278,8 @@ private void applyUIEffects() {
             highScore.incrementBlackjacks();
             highScore.updateHighestBalance(player.getBalance());
             highScore.saveHighScores();
+
+            handleWinCondition();
 
             endRound();
         }
@@ -269,6 +310,8 @@ private void applyUIEffects() {
         ft.play();
     }
 
+
+
     @FXML
     private void onHitClicked() {
         if (!gameInProgress) return;
@@ -284,6 +327,7 @@ private void applyUIEffects() {
         if (playerSum > 21) {
             dialogLabel.setText("Bust! You lose.");
             animateGameStatus();
+            animatePersonImage(2);
 
             // Updated DEN REICHTUM DES SPIELERS
             player.adjustBalance(-currentBet);
@@ -293,6 +337,8 @@ private void applyUIEffects() {
             highScore.incrementGamesPlayed();
             highScore.updateHighestBalance(player.getBalance());
             highScore.saveHighScores();
+
+             handleWinCondition();
 
             endRound();
         }
@@ -344,14 +390,19 @@ private void applyUIEffects() {
         if (dealerSum > 21 || playerSum > dealerSum) {
             dialogLabel.setText("You win!");
             animateGameStatus();
+            animatePersonImage(2);
             player.adjustBalance(currentBet);
             playerWon = true;
+
+            handleWinCondition();
         } else if (dealerSum == playerSum) {
             dialogLabel.setText("Push - it's a tie!");
             animateGameStatus();
+            animatePersonImage(3);
         } else {
             dialogLabel.setText("Dealer wins!");
             animateGameStatus();
+            animatePersonImage(2);
             player.adjustBalance(-currentBet);
         }
 
@@ -382,6 +433,10 @@ private void applyUIEffects() {
             hitButton.setDisable(true);
             standButton.setDisable(true);
             nextRoundButton.setDisable(true);
+            animatePersonImage(3);
+            PauseTransition wait = new PauseTransition(Duration.seconds(1.2));
+            wait.setOnFinished(event -> showBankruptOverlay());
+            wait.play();
             return;
         }
 
@@ -542,5 +597,53 @@ private void applyUIEffects() {
             // Hier kannst du nach der Pause etwas machen, falls nötig
         });
         pause.play();
+    }
+
+    private void showBankruptOverlay() {
+        // Zeige Person4 für 2 Sekunden
+        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person4.png")));
+
+        PauseTransition showPerson4 = new PauseTransition(Duration.seconds(3));
+        showPerson4.setOnFinished(ev -> {
+            // Jetzt Overlay sichtbar machen und Klicks blockieren
+            blackOverlay.setOpacity(1.0);
+            blackOverlay.setMouseTransparent(false);
+            blackOverlay.toFront();
+
+            // Nach 1 Sekunde: Fade-Out starten
+            PauseTransition wait = new PauseTransition(Duration.seconds(1));
+            wait.setOnFinished(e -> {
+                FadeTransition fade = new FadeTransition(Duration.seconds(3), blackOverlay);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setOnFinished(ev2 -> {
+                    blackOverlay.setMouseTransparent(true); // Klicks wieder erlauben
+                    blackOverlay.toBack();
+                    // Optional: Person1 wieder anzeigen
+                    personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
+                });
+                fade.play();
+            });
+            wait.play();
+        });
+        showPerson4.play();
+    }
+
+    private void handleWinCondition() {
+    if (!endlessMode && player.getBalance() >= 200) {
+        dialogLabel.setText("Congratulations for winning 200$!");
+        hitButton.setDisable(true);
+        standButton.setDisable(true);
+        nextRoundButton.setDisable(true);
+        gameInProgress = false;
+    }
+    }
+
+    public void setHighScore(HighScore highScore) {
+        this.highScore = highScore;
+    }
+
+    public HighScore getHighScore() {
+        return highScore;
     }
 }
