@@ -266,7 +266,7 @@ private void applyUIEffects() {
             // Zeigen der Blackjack Nachricht mit Animation
             dialogLabel.setText("Blackjack! You win 1.5x your bet!");
             animateGameStatus();
-            animatePersonImage(3);
+            animatePersonImage(2);
 
             // Reichtum update
             player.adjustBalance((int) (currentBet * 1.5));
@@ -398,7 +398,7 @@ private void applyUIEffects() {
         } else if (dealerSum == playerSum) {
             dialogLabel.setText("Push - it's a tie!");
             animateGameStatus();
-            animatePersonImage(3);
+            animatePersonImage(2);
         } else {
             dialogLabel.setText("Dealer wins!");
             animateGameStatus();
@@ -632,6 +632,7 @@ private void applyUIEffects() {
     private void handleWinCondition() {
     if (!endlessMode && player.getBalance() >= 200) {
         dialogLabel.setText("Congratulations for winning 200$!");
+        personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person5.png")));
         hitButton.setDisable(true);
         standButton.setDisable(true);
         nextRoundButton.setDisable(true);
