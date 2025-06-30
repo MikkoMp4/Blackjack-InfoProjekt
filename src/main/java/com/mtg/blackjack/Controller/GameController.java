@@ -191,7 +191,7 @@ private void applyUIEffects() {
         // Reset spiel state
         gameInProgress = true;
         dealerTurn = false;
-        gameStatusLabel.setText("");
+        dialogLabel.setText("");
         roundLabel.setText(String.valueOf(round));
 
         // Clear Hands
@@ -226,7 +226,7 @@ private void applyUIEffects() {
 
         if (playerSum == 21 && player.getHand().size() == 2) {
             // Zeigen der Blackjack Nachricht mit Animation
-            gameStatusLabel.setText("Blackjack! You win 1.5x your bet!");
+            dialogLabel.setText("Blackjack! You win 1.5x your bet!");
             animateGameStatus();
 
             // Reichtum update
@@ -282,7 +282,7 @@ private void applyUIEffects() {
         // Checken ob der Spieler besser nie nach Vegas fliegen sollte (checkt ob der Spieler über 21 ist)
         int playerSum = player.calculateHandSum();
         if (playerSum > 21) {
-            gameStatusLabel.setText("Bust! You lose.");
+            dialogLabel.setText("Bust! You lose.");
             animateGameStatus();
 
             // Updated DEN REICHTUM DES SPIELERS
@@ -342,15 +342,15 @@ private void applyUIEffects() {
         boolean playerWon = false;
 
         if (dealerSum > 21 || playerSum > dealerSum) {
-            gameStatusLabel.setText("You win!");
+            dialogLabel.setText("You win!");
             animateGameStatus();
             player.adjustBalance(currentBet);
             playerWon = true;
         } else if (dealerSum == playerSum) {
-            gameStatusLabel.setText("Push - it's a tie!");
+            dialogLabel.setText("Push - it's a tie!");
             animateGameStatus();
         } else {
-            gameStatusLabel.setText("Dealer wins!");
+            dialogLabel.setText("Dealer wins!");
             animateGameStatus();
             player.adjustBalance(-currentBet);
         }
@@ -378,7 +378,7 @@ private void applyUIEffects() {
 
         // Checken ob der Spieler noch Geld hat
         if (player.getBalance() <= 0) {
-            gameStatusLabel.setText("Game Over! You're out of money.");
+            dialogLabel.setText("Too bad! You're out of money.");
             hitButton.setDisable(true);
             standButton.setDisable(true);
             nextRoundButton.setDisable(true);
