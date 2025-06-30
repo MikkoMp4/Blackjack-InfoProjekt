@@ -142,17 +142,18 @@ public class GameController {
     //Karten austeilen Animation
     private void showPerson2ThenStartRound() {
     personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person2.png")));
-    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+    PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
     pause.setOnFinished(e -> {
         personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person1.png")));
         startNewRound();
     });
     pause.play();
 }
-    /**
-     * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
-     */
-    private void applyUIEffects() {
+
+/**
+ * Wendet UI-Effekte an, um das Spiel visuell ansprechender zu gestalten
+ */
+private void applyUIEffects() {
         // Drop shadow für die Kartenboxen
         DropShadow cardShadow = new DropShadow();
         cardShadow.setColor(Color.BLACK);
