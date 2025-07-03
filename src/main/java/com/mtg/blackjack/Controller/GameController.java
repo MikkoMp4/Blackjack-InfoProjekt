@@ -559,9 +559,11 @@ private void applyUIEffects() {
         personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person4.png")));
 
         PauseTransition showPerson4 = new PauseTransition(Duration.seconds(3));
+        
         showPerson4.setOnFinished(ev -> {
             // Jetzt Overlay sichtbar machen und Klicks blockieren
             blackOverlay.setOpacity(1.0);
+            playPistolSound();
             blackOverlay.setMouseTransparent(false);
             blackOverlay.toFront();
 
