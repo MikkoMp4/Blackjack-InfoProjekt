@@ -26,6 +26,8 @@ import javafx.util.Duration;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class GameController {
     private HighScore highScore;
     private Timeline talkingTimeline;
     private boolean endlessMode = false;
+    private MediaPlayer backgroundPlayer;
     
 
     
@@ -82,6 +85,8 @@ public class GameController {
 
         // wendet UI improvements an
         applyUIEffects();
+
+        playBackgroundMusic();
 
         // Starten des Spiels
         updateBalanceDisplay();
@@ -404,6 +409,9 @@ private void applyUIEffects() {
     private void onBackToMenuClicked() {
         try {
             // Lädt die Start-Szene
+            if (backgroundPlayer != null) {
+                backgroundPlayer.stop();
+            }
             Parent root = FXMLLoader.load(getClass().getResource("/com/mtg/blackjack/View/StartScreen.fxml"));
             Scene scene = new Scene(root, 800, 600);
 
@@ -564,7 +572,12 @@ private void applyUIEffects() {
         showPerson4.setOnFinished(ev -> {
             // Jetzt Overlay sichtbar machen und Klicks blockieren
             blackOverlay.setOpacity(1.0);
+
+            if (backgroundPlayer != null) {
+                backgroundPlayer.stop();
+            }
             playPistolSound();
+
             blackOverlay.setMouseTransparent(false);
             blackOverlay.toFront();
 
@@ -691,4 +704,19 @@ private void applyUIEffects() {
         System.err.println("Card sound could not be played: " + e.getMessage());
     }
     }
+
+    private void playBackgroundMusic() {
+    try {
+        if (backgroundPlayer != null) {
+            backgroundPlayer.stop();
+        }
+        Media media = new Media(getClass().getResource("/sounds/Jackblack21.mp3").toExternalForm());
+        backgroundPlayer = new MediaPlayer(media);
+        backgroundPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Dauerschleife
+        backgroundPlayer.setVolume(0.3); // ggf. anpassen
+        backgroundPlayer.play();
+    } catch (Exception e) {
+        System.err.println("Background music could not be played: " + e.getMessage());
+    }
+}
 }
