@@ -603,7 +603,7 @@ private void applyUIEffects() {
         int dealerSum = gameLogic.sumHand(dealerHand);
         if (dealerSum < 17) {
             // Wenn die nächste Karte die dritte ist (also schon 2 Karten da sind)
-            Duration delay = dealerHand.size() == 2 ? Duration.seconds(1.8) : Duration.seconds(0.8);
+             Duration delay = dealerHand.size() >= 2 ? Duration.seconds(1) : Duration.ZERO;
             // Erklärung: dealerHand.size()==2 -> 2 Karten liegen, die nächste ist die dritte
 
             PauseTransition pause = new PauseTransition(delay);
@@ -666,5 +666,13 @@ private void applyUIEffects() {
     } catch (Exception e) {
         System.err.println("Shuffle sound could not be played: " + e.getMessage());
     }
-}
+    }
+    private void playPistolSound() {
+    try {
+        AudioClip pistolSound = new AudioClip(getClass().getResource("/sounds/pistol.mp3").toExternalForm());
+        pistolSound.play();
+    } catch (Exception e) {
+        System.err.println("Pistol sound could not be played: " + e.getMessage());
+    }
+    }
 }
