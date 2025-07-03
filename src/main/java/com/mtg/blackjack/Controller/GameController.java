@@ -322,6 +322,7 @@ private void applyUIEffects() {
         player.addCardToHand(newCard);
         updatePlayerCards();
         animateNewCard();
+        playCardSound();
 
         // Checken ob der Spieler besser nie nach Vegas fliegen sollte (checkt ob der Spieler über 21 ist)
         int playerSum = player.calculateHandSum();
@@ -612,6 +613,7 @@ private void applyUIEffects() {
             pause.setOnFinished(e -> {
                 dealerHand.add(gameLogic.drawCard());
                 updateDealerCards(false);
+                playCardSound();
                 dealerDrawCardsAnimatedInternal();
             });
             pause.play();
@@ -664,6 +666,7 @@ private void applyUIEffects() {
     private void playShuffleSound() {
     try {
         AudioClip shuffleSound = new AudioClip(getClass().getResource("/sounds/shuffling.mp3").toExternalForm());
+        shuffleSound.setVolume(0.8);
         shuffleSound.play();
     } catch (Exception e) {
         System.err.println("Shuffle sound could not be played: " + e.getMessage());
@@ -675,6 +678,17 @@ private void applyUIEffects() {
         pistolSound.play();
     } catch (Exception e) {
         System.err.println("Pistol sound could not be played: " + e.getMessage());
+    }
+    }
+
+    private void playCardSound() {
+    try {
+        AudioClip cardSound = new AudioClip(getClass().getResource("/sounds/card.mp3").toExternalForm());
+        cardSound.setVolume(0.3);
+        if (!gameInProgress) return;
+        cardSound.play();
+    } catch (Exception e) {
+        System.err.println("Card sound could not be played: " + e.getMessage());
     }
     }
 }
