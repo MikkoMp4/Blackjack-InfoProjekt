@@ -25,7 +25,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
-
+import javafx.scene.media.AudioClip;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +153,8 @@ public class GameController {
     if (talkingTimeline != null) {
         talkingTimeline.stop();
     }
+
+    playShuffleSound();
 
     personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person2.png")));
     PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
@@ -368,53 +370,7 @@ private void applyUIEffects() {
         dealerTurn = true;
         updateDealerCards(false); // Zeigt die zweite Karte des Dealers
 
-        // Dealer zieht Karten bis er mindestens 17 hat
-        while (gameLogic.sumHand(dealerHand) < 17) {
-            dealerHand.add(gameLogic.drawCard());
-            updateDealerCards(false);
-
-            // einen kleinen Delay einfügen, um die Animation zu sehen
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        // Gewinner bestimmen
-        int playerSum = player.calculateHandSum();
-        int dealerSum = gameLogic.sumHand(dealerHand);
-        boolean playerWon = false;
-
-        if (dealerSum > 21 || playerSum > dealerSum) {
-            dialogLabel.setText("You win!");
-            animateGameStatus();
-            animatePersonImage(2);
-            player.adjustBalance(currentBet);
-            playerWon = true;
-
-            handleWinCondition();
-        } else if (dealerSum == playerSum) {
-            dialogLabel.setText("Push - it's a tie!");
-            animateGameStatus();
-            animatePersonImage(2);
-        } else {
-            dialogLabel.setText("Dealer wins!");
-            animateGameStatus();
-            animatePersonImage(2);
-            player.adjustBalance(-currentBet);
-        }
-
-        // Updaten der Statistik
-        highScore.incrementGamesPlayed();
-        if (playerWon) {
-            highScore.incrementGamesWon();
-        }
-        highScore.updateHighestBalance(player.getBalance());
-        highScore.saveHighScores();
-
-        updateBalanceDisplay();
-        endRound();
+        dealerDrawCardsAnimated();
     }
 
     @FXML
@@ -639,6 +595,62 @@ private void applyUIEffects() {
     }
     }
 
+    private void dealerDrawCardsAnimated() {
+    dealerDrawCardsAnimatedInternal();
+}
+
+    private void dealerDrawCardsAnimatedInternal() {
+        int dealerSum = gameLogic.sumHand(dealerHand);
+        if (dealerSum < 17) {
+            // Wenn die nächste Karte die dritte ist (also schon 2 Karten da sind)
+            Duration delay = dealerHand.size() == 2 ? Duration.seconds(1.8) : Duration.seconds(0.8);
+            // Erklärung: dealerHand.size()==2 -> 2 Karten liegen, die nächste ist die dritte
+
+            PauseTransition pause = new PauseTransition(delay);
+            pause.setOnFinished(e -> {
+                dealerHand.add(gameLogic.drawCard());
+                updateDealerCards(false);
+                dealerDrawCardsAnimatedInternal();
+            });
+            pause.play();
+        } else {
+            // Nach dem Ziehen: Gewinner bestimmen und Runde beenden
+            int playerSum = player.calculateHandSum();
+            int dealerSumFinal = gameLogic.sumHand(dealerHand);
+            boolean playerWon = false;
+
+            if (dealerSumFinal > 21 || playerSum > dealerSumFinal) {
+                dialogLabel.setText("You win!");
+                animateGameStatus();
+                animatePersonImage(2);
+                player.adjustBalance(currentBet);
+                playerWon = true;
+
+                handleWinCondition();
+            } else if (dealerSumFinal == playerSum) {
+                dialogLabel.setText("Push - it's a tie!");
+                animateGameStatus();
+                animatePersonImage(2);
+            } else {
+                dialogLabel.setText("Dealer wins!");
+                animateGameStatus();
+                animatePersonImage(2);
+                player.adjustBalance(-currentBet);
+            }
+
+            // Statistik updaten
+            highScore.incrementGamesPlayed();
+            if (playerWon) {
+                highScore.incrementGamesWon();
+            }
+            highScore.updateHighestBalance(player.getBalance());
+            highScore.saveHighScores();
+
+            updateBalanceDisplay();
+            endRound();
+        }
+    }
+
     public void setHighScore(HighScore highScore) {
         this.highScore = highScore;
     }
@@ -646,4 +658,13 @@ private void applyUIEffects() {
     public HighScore getHighScore() {
         return highScore;
     }
+
+    private void playShuffleSound() {
+    try {
+        AudioClip shuffleSound = new AudioClip(getClass().getResource("/sounds/shuffling.mp3").toExternalForm());
+        shuffleSound.play();
+    } catch (Exception e) {
+        System.err.println("Shuffle sound could not be played: " + e.getMessage());
+    }
+}
 }
