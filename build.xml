@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\mikko\IdeaProjects\Blackjack-InfoProjekt\target\blackjack-info-projekt-1.0-SNAPSHOT-fat.jar</jar>
-  <outfile>C:\Users\mikko\IdeaProjects\Blackjack-InfoProjekt\Blackjack-1.0-SNAPSHOT.exe</outfile>
+  <jar>C:\Users\mikko\IdeaProjects\Blackjack-InfoProjekt\target\blackjack-info-projekt-1.1-fat.jar</jar>
+  <outfile>C:\Users\mikko\IdeaProjects\Blackjack-InfoProjekt\Blackjack-1.1-SNAPSHOT.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -21,4 +21,18 @@
     <minVersion></minVersion>
     <maxVersion></maxVersion>
   </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1</txtFileVersion>
+    <fileDescription>Blackjack Game</fileDescription>
+    <copyright>MTG</copyright>
+    <productVersion>1.1.0.0</productVersion>
+    <txtProductVersion>1.1</txtProductVersion>
+    <productName>Blackjack-Info-Game</productName>
+    <companyName></companyName>
+    <internalName>JackBLack</internalName>
+    <originalFilename>blackjack-info-projekt-1.1-fat.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>GERMAN</language>
+  </versionInfo>
 </launch4jConfig>

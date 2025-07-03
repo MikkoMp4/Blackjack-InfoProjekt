@@ -6,7 +6,7 @@
 
     <groupId>com.mtg.blackjack</groupId>
     <artifactId>blackjack-info-projekt</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
 
 
     <dependencies>
