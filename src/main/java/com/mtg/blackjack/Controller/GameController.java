@@ -153,7 +153,6 @@ public class GameController {
     if (talkingTimeline != null) {
         talkingTimeline.stop();
     }
-    // Falls du weitere Timelines für Person-Animationen hast, stoppe sie hier ebenfalls
 
     personImage.setImage(new Image(getClass().getResourceAsStream("/img/characters/Person2.png")));
     PauseTransition pause = new PauseTransition(Duration.seconds(1.5));

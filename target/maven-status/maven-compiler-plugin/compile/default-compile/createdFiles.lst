@@ -1,7 +1,0 @@
-com\mtg\blackjack\Controller\logic.class
-com\mtg\blackjack\Model\Player.class
-com\mtg\blackjack\Controller\StartScreenController.class
-com\mtg\blackjack\Main.class
-com\mtg\blackjack\Model\HighScore.class
-com\mtg\blackjack\Controller\StatisticsController.class
-com\mtg\blackjack\Controller\GameController.class
